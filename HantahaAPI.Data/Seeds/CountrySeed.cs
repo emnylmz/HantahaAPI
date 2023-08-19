@@ -1,6 +1,5 @@
 ﻿using System;
-using HantahaAPI.Core.Model;
-using HantahaAPI.Core.Model;
+using HantahaAPI.Core.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

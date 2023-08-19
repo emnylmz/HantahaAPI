@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
-using HantahaAPI.Core.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace HantahaAPI.Data

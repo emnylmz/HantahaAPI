@@ -4,7 +4,7 @@ using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HantahaAPI.API;
-using HantahaAPI.Core.Model;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Data;
 using HantahaAPI.Service.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

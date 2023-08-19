@@ -2,11 +2,12 @@
 using System.Security.Claims;
 using AutoMapper;
 using HantahaAPI.Core.DTOs;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Model;
 
 namespace HantahaAPI.Service.Mapping
 {
-	public class MapProfile:Profile
+    public class MapProfile:Profile
 	{
 		public MapProfile()
 		{

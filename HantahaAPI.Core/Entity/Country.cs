@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HantahaAPI.Core.Model
+namespace HantahaAPI.Core.Entity
 {
     public class Country
     {

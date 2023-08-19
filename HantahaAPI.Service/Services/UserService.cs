@@ -1,6 +1,6 @@
 ﻿using HantahaAPI.Core.DTOs;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
-using HantahaAPI.Core.Model;
 
 namespace HantahaAPI.Service.Services
 {

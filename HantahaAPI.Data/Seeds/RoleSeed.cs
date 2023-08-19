@@ -1,11 +1,11 @@
 ﻿using System;
-using HantahaAPI.Core.Model;
+using HantahaAPI.Core.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HantahaAPI.Data.Seeds
 {
-	public class RoleSeed:IEntityTypeConfiguration<Role>
+    public class RoleSeed:IEntityTypeConfiguration<Role>
 	{
 
         public void Configure(EntityTypeBuilder<Role> builder)

@@ -3,6 +3,7 @@ using System;
 using HantahaAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HantahaAPI.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230819231518_menu")]
+    partial class menu
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1515,46 +1518,6 @@ namespace HantahaAPI.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HantahaAPI.Core.Entity.Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<bool>("ReadStatus")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.ToTable("Feedback", (string)null);
-                });
-
             modelBuilder.Entity("HantahaAPI.Core.Entity.Menu", b =>
                 {
                     b.Property<int>("Id")
@@ -1762,30 +1725,6 @@ namespace HantahaAPI.Data.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("HantahaAPI.Core.Entity.UserPasswordResetToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ExpirationTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserPasswordResetToken", (string)null);
-                });
-
             modelBuilder.Entity("HantahaAPI.Core.Entity.UserRole", b =>
                 {
                     b.Property<int>("UserRoleId")
@@ -1810,17 +1749,6 @@ namespace HantahaAPI.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole", (string)null);
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.Feedback", b =>
-                {
-                    b.HasOne("HantahaAPI.Core.Entity.User", "User")
-                        .WithMany("FeedBacks")
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HantahaAPI.Core.Entity.Menu", b =>
@@ -1858,17 +1786,6 @@ namespace HantahaAPI.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.UserPasswordResetToken", b =>
-                {
-                    b.HasOne("HantahaAPI.Core.Entity.User", "User")
-                        .WithMany("UserPasswordResetTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HantahaAPI.Core.Entity.UserRole", b =>
@@ -1911,10 +1828,6 @@ namespace HantahaAPI.Data.Migrations
 
             modelBuilder.Entity("HantahaAPI.Core.Entity.User", b =>
                 {
-                    b.Navigation("FeedBacks");
-
-                    b.Navigation("UserPasswordResetTokens");
-
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

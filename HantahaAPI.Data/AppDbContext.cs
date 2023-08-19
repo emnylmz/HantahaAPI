@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reflection;
-using HantahaAPI.Core.Model;
+using HantahaAPI.Core.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HantahaAPI.Data
 {
-	public class AppDbContext:DbContext
+    public class AppDbContext:DbContext
 	{
 		public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
 		{

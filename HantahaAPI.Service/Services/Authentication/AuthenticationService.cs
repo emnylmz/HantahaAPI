@@ -3,16 +3,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Runtime;
 using System.Security.Claims;
 using System.Text;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Enums;
 using HantahaAPI.Core.Interfaces;
-using HantahaAPI.Core.Model;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 
 namespace HantahaAPI.Service.Services
 {
-	public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly Settings _settings;
 

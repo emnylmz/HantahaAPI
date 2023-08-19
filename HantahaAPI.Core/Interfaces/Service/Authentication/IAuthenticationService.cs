@@ -1,9 +1,9 @@
 ﻿using System;
-using HantahaAPI.Core.Model;
+using HantahaAPI.Core.Entity;
 
 namespace HantahaAPI.Core.Interfaces
 {
-	public interface IAuthenticationService
+    public interface IAuthenticationService
 	{
 		string Login(User user);	
 	}

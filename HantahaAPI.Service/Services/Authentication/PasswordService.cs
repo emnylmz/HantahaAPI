@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
-using HantahaAPI.Core.Model;
 using Microsoft.Extensions.Options;
 
 namespace HantahaAPI.Service.Services
