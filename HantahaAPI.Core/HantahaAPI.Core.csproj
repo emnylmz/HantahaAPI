@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Interfaces\" />
+    <None Remove="Interfaces\Repository\" />
+    <None Remove="Interfaces\Service\" />
+    <None Remove="Interfaces\UnitOfWork\" />
+    <None Remove="DTOs\" />
+    <None Remove="Model\" />
+    <None Remove="Interfaces\Custom\" />
+    <None Remove="Interfaces\Service\Authentication\" />
+    <None Remove="Enums\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Interfaces\Repository\" />
+    <Folder Include="Interfaces\Service\" />
+    <Folder Include="Interfaces\UnitOfWork\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Interfaces\Service\Authentication\" />
+    <Folder Include="Enums\" />
+  </ItemGroup>
+</Project>
