@@ -35,23 +35,13 @@ namespace HantahaAPI.API.Controllers
             _passwordService = passwordService;
         }
 
-        //[HttpGet("GetAll"),Authorize(Roles ="Test")]
-        [HttpGet("GetAll"),Authorize]
+        [HttpGet("GetAll"),Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userService.GetAllAsync();
             var userDtos = _mapper.Map<List<UserDto>>(users.ToList());
-            return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, userDtos));
+            return CreateActionResult(CustomResponseDto<List<UserDto>>.SuccessWithData(userDtos));
         }
-
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser(User user)
-        {
-            var entity = await _userService.AddAsync(user);
-            var userDto = _mapper.Map<UserDto>(user);
-            return CreateActionResult(CustomResponseDto<UserDto>.Success(200, userDto));
-        }
-
 
     }
 

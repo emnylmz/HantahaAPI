@@ -43,13 +43,14 @@ namespace HantahaAPI.API.Controllers
 
             //user gelirse şifre doğru
             if (user == null)
-                return CreateActionResult(CustomResponseDto<List<string>>.Fail(200, "Kullanıcı adı veya şifre hatalı"));
+                return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("Kullanıcı adı veya şifre hatalı"));
 
             else
             {
                 var token =_authenticationService.Login(user);
-
-                return CreateActionResult(CustomResponseDto<string>.Success(200, token));
+                //kullanıcı rolü
+                //kullanıcı menüleri
+                return CreateActionResult(CustomResponseDto<string>.SuccessWithData(token));
             }
         }
     }
