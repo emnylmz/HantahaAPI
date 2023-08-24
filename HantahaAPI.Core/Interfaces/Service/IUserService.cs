@@ -8,6 +8,7 @@ namespace HantahaAPI.Core.Interfaces
     public interface IUserService:IService<User>
     {
         Task<User> CheckPassAsync(LoginDto loginDto);
+        bool ValidateUserPassword(UserDto userDto, out string errorMessage);
     }
 }
 

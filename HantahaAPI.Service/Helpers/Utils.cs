@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 
 namespace HantahaAPI.Service.Helpers
 {
-
     public class Utils
 	{
 	}

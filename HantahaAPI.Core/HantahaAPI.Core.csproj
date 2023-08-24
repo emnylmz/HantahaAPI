@@ -24,6 +24,5 @@
     <Folder Include="Interfaces\UnitOfWork\" />
     <Folder Include="DTOs\" />
     <Folder Include="Interfaces\Service\Authentication\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 </Project>

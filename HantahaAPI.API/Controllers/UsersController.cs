@@ -8,6 +8,7 @@ using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
 using HantahaAPI.Service.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -41,6 +42,21 @@ namespace HantahaAPI.API.Controllers
             var users = await _userService.GetAllAsync();
             var userDtos = _mapper.Map<List<UserDto>>(users.ToList());
             return CreateActionResult(CustomResponseDto<List<UserDto>>.SuccessWithData(userDtos));
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(UserDto userDto)
+        {
+            //şifre kontrolleri eşit mi güvenli mi vs.
+            if (!_userService.ValidateUserPassword(userDto, out string validationMessage))
+                return CreateActionResult(CustomResponseDto<string>.FailWithError(validationMessage));
+
+            var user = _mapper.Map<User>(userDto);
+
+            await _userService.AddAsync(user);
+
+            return CreateActionResult(CustomResponseDto<List<UserDto>>.SuccessWithoutData());
+
         }
 
     }

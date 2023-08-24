@@ -1,6 +1,7 @@
 ﻿using HantahaAPI.Core.DTOs;
 using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace HantahaAPI.Service.Services
 {
@@ -21,8 +22,12 @@ namespace HantahaAPI.Service.Services
         {
             entity.Password = _passwordService.EncryptPassword(entity.Password, out string vectorIV);
             entity.LastIV = vectorIV;
-            entity.CreatedOn = DateTime.Now;
-            //createdBy eklenecek
+            entity.CreatedOn = DateTime.Now.ToUniversalTime();
+            entity.IsActive = true;
+
+            entity.UserRoles = new List<UserRole>();
+            entity.UserRoles.Add(new UserRole { RoleId=2,User=entity,IsActive = true });
+
             return base.AddAsync(entity);
         }
 
@@ -36,6 +41,44 @@ namespace HantahaAPI.Service.Services
                 CompareEncrytedAndUnencryptedPassword(user.Password, user.LastIV, loginDto.Password))
                 return null;
             return user;
+        }
+
+
+        public bool ValidateUserPassword(UserDto userDto, out string errorMessage)
+        {
+            errorMessage = null;
+
+            if (string.IsNullOrWhiteSpace(userDto.Password) || string.IsNullOrWhiteSpace(userDto.RePassword))
+            {
+                errorMessage = "Şifre alanları boş olamaz.";
+                return false;
+            }
+
+            if (userDto.Password != userDto.RePassword)
+            {
+                errorMessage = "Şifreler uyuşmuyor.";
+                return false;
+            }
+
+            if (userDto.Password.Length < 12)
+            {
+                errorMessage = "Şifre en az 12 karakter uzunluğunda olmalıdır.";
+                return false;
+            }
+
+            if (!ContainsRequiredCharacters(userDto.Password))
+            {
+                errorMessage = "Şifre büyük harf, küçük harf, rakam ve sembol içermelidir.";
+                return false;
+            }
+
+
+            return true;
+        }
+
+        private static bool ContainsRequiredCharacters(string password)
+        {
+            return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$");
         }
     }
 }

@@ -18,6 +18,8 @@ namespace HantahaAPI.Core.Entity
 
 #nullable disable
         public bool IsActive { get; set; }
+
+        public int UserVisibiltyType { get; set; }
         public string LastIV { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; }
