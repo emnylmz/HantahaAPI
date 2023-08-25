@@ -17,7 +17,6 @@
     <None Remove="Services\Authentication\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Mapping\" />
     <Folder Include="Helpers\" />
     <Folder Include="Services\Authentication\" />

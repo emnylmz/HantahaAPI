@@ -32,7 +32,6 @@
     <None Remove="Modules\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Modules\" />
   </ItemGroup>
 </Project>

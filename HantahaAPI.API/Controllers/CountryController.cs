@@ -14,13 +14,13 @@ using Microsoft.AspNetCore.Mvc;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace HantahaAPI.API.Controllers
 {
-    public class UsersController : BaseController
+    public class CountryController : BaseController
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
 
-        public UsersController(
+        public CountryController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             IConfiguration configuration,

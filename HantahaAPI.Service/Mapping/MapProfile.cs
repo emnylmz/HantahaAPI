@@ -4,6 +4,7 @@ using AutoMapper;
 using HantahaAPI.Core.DTOs;
 using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Model;
+using HantahaAPI.Core.Model.Response;
 
 namespace HantahaAPI.Service.Mapping
 {

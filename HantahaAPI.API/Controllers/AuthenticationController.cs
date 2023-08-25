@@ -14,9 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace HantahaAPI.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    
     public class AuthenticationController : BaseController
     {
         private readonly IMapper _mapper;

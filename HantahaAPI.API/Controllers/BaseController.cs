@@ -13,6 +13,8 @@ using AutoMapper;
 
 namespace HantahaAPI.API.Controllers
 {
+    [Route("HantahaAPI/[controller]")]
+    [ApiController]
     public class BaseController : ControllerBase
     {
         public readonly int UserId;
