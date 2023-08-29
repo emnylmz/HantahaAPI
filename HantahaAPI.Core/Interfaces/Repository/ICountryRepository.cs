@@ -1,9 +1,11 @@
-﻿using HantahaAPI.Core.Entity;
+﻿using System;
+using System.Linq.Expressions;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Model.Response;
 
 namespace HantahaAPI.Core.Interfaces
 {
-    public interface ICountryService : IService<Country>
+    public interface ICountryRepository : IGenericRepository<Country>
     {
         Task<List<CountryComboModel>> GetAllCountries();
     }

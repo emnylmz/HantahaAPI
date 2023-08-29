@@ -1,9 +1,9 @@
 ﻿using System;
 namespace HantahaAPI.Core.Model
 {
-	public class ComboDto
-	{
-		public string Label { get; set; }
-	}
+	public class AuthenticatedUserDto
+    {
+        public int UserId { get; set; }
+    }
 }
 
