@@ -6,9 +6,9 @@ using System.Text;
 using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Enums;
 using HantahaAPI.Core.Interfaces;
+using HantahaAPI.Core.Model.Response;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic;
 
 namespace HantahaAPI.Service.Services
 {
@@ -21,31 +21,40 @@ namespace HantahaAPI.Service.Services
             _settings = settings.Value;
         }
 
-        public string Login(User user)
+        public AuthenticationResponse Login(User user)
         {
             return GenerateToken(user);
         }
 
-        private string GenerateToken(User user)
+        private AuthenticationResponse GenerateToken(User user)
         {
+            AuthenticationResponse authenticationResponse = new();
+
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.JWTSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Username),
                 new Claim(CustomClaimTypes.UserId,user.Id.ToString()),
-                //new Claim(ClaimTypes.Role,user.Role)
+                new Claim(ClaimTypes.Role,user.IsAdmin?"Admin":"User")
             };
+
+            DateTime expireDate = DateTime.Now.AddMinutes(_settings.JWTSettings.ExpireMinutes);
             var token = new JwtSecurityToken(
             issuer: _settings.JWTSettings.Issuer,
-                audience: _settings.JWTSettings.Audience,
+             audience: _settings.JWTSettings.Audience,
             claims,
-                expires: DateTime.Now.AddMinutes(_settings.JWTSettings.ExpireMinutes),
+                expires: expireDate,
                 signingCredentials: credentials);
 
+            authenticationResponse.Token= new JwtSecurityTokenHandler().WriteToken(token);
+            authenticationResponse.IsAdmin = user.IsAdmin;
+            return authenticationResponse;
+        }
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-
+        public void LogOut()
+        {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
     }

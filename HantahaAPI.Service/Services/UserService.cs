@@ -23,50 +23,58 @@ namespace HantahaAPI.Service.Services
             entity.Password = _passwordService.EncryptPassword(entity.Password, out string vectorIV);
             entity.LastIV = vectorIV;
             entity.CreatedOn = DateTime.Now.ToUniversalTime();
+            entity.IsAdmin = false;
             entity.IsActive = true;
-
-            entity.UserRoles = new List<UserRole>();
-            entity.UserRoles.Add(new UserRole { RoleId=2,User=entity,IsActive = true });
 
             return base.AddAsync(entity);
         }
 
-        public async Task<User> CheckPassAsync(LoginDto loginDto)
+        public async Task<List<User>> GetAll()
         {
-            var user = await _userRepository.GetByUsername(loginDto.Username);
+            return await _userRepository.GetAll();
+        }
+
+        public async Task<bool> CheckPassAndGetUserAsync(LoginDto loginDto)
+        {
+            var user = await _userRepository.GetByEmail(loginDto.Email);
 
             if (user == null)
-                return user;
+                return false;
             else if (!_passwordService.
                 CompareEncrytedAndUnencryptedPassword(user.Password, user.LastIV, loginDto.Password))
-                return null;
-            return user;
+                return false;
+            return true;
+        }
+
+        public async Task<User> GetByEmail(string email)
+        {
+            return await _userRepository.GetByEmail(email);
         }
 
 
-        public bool ValidateUserPassword(UserDto userDto, out string errorMessage)
+        public bool ValidateUserPassword(UserCreateDto userCreateDto, out string errorMessage)
         {
             errorMessage = null;
 
-            if (string.IsNullOrWhiteSpace(userDto.Password) || string.IsNullOrWhiteSpace(userDto.RePassword))
+            if (string.IsNullOrWhiteSpace(userCreateDto.Password) || string.IsNullOrWhiteSpace(userCreateDto.RePassword))
             {
                 errorMessage = "Şifre alanları boş olamaz.";
                 return false;
             }
 
-            if (userDto.Password != userDto.RePassword)
+            if (userCreateDto.Password != userCreateDto.RePassword)
             {
                 errorMessage = "Şifreler uyuşmuyor.";
                 return false;
             }
 
-            if (userDto.Password.Length < 12)
+            if (userCreateDto.Password.Length < 12)
             {
                 errorMessage = "Şifre en az 12 karakter uzunluğunda olmalıdır.";
                 return false;
             }
 
-            if (!ContainsRequiredCharacters(userDto.Password))
+            if (!ContainsRequiredCharacters(userCreateDto.Password))
             {
                 errorMessage = "Şifre büyük harf, küçük harf, rakam ve sembol içermelidir.";
                 return false;

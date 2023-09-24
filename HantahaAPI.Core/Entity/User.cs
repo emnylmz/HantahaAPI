@@ -20,9 +20,9 @@ namespace HantahaAPI.Core.Entity
         public bool IsActive { get; set; }
 
         public int UserVisibiltyType { get; set; }
+        public bool IsAdmin { get; set; }
         public string LastIV { get; set; }
 
-        public ICollection<UserRole> UserRoles { get; set; }
         public ICollection<Feedback> FeedBacks { get; set; }
         public ICollection<UserPasswordResetToken> UserPasswordResetTokens { get; set; }
 

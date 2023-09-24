@@ -1541,110 +1541,6 @@ namespace HantahaAPI.Data.Migrations
                     b.ToTable("Feedback", (string)null);
                 });
 
-            modelBuilder.Entity("HantahaAPI.Core.Entity.Menu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Icon")
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int?>("MenuId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("MenuText")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<int?>("ParentMenuId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MenuId");
-
-                    b.ToTable("Menu", (string)null);
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.MenuRole", b =>
-                {
-                    b.Property<int>("MenuRoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MenuRoleId"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("MenuId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("MenuRoleId");
-
-                    b.HasIndex("MenuId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("MenuRole", (string)null);
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Role", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsActive = true,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IsActive = true,
-                            Name = "User"
-                        });
-                });
-
             modelBuilder.Entity("HantahaAPI.Core.Entity.SystemLog", b =>
                 {
                     b.Property<int>("Id")
@@ -1698,15 +1594,18 @@ namespace HantahaAPI.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("Firstname")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Firstname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastIV")
@@ -1722,8 +1621,8 @@ namespace HantahaAPI.Data.Migrations
 
                     b.Property<string>("Lastname")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -1741,8 +1640,8 @@ namespace HantahaAPI.Data.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -1775,32 +1674,6 @@ namespace HantahaAPI.Data.Migrations
                     b.ToTable("UserPasswordResetToken", (string)null);
                 });
 
-            modelBuilder.Entity("HantahaAPI.Core.Entity.UserRole", b =>
-                {
-                    b.Property<int>("UserRoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserRoleId"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserRoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRole", (string)null);
-                });
-
             modelBuilder.Entity("HantahaAPI.Core.Entity.Feedback", b =>
                 {
                     b.HasOne("HantahaAPI.Core.Entity.User", "User")
@@ -1810,32 +1683,6 @@ namespace HantahaAPI.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.Menu", b =>
-                {
-                    b.HasOne("HantahaAPI.Core.Entity.Menu", null)
-                        .WithMany("Menus")
-                        .HasForeignKey("MenuId");
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.MenuRole", b =>
-                {
-                    b.HasOne("HantahaAPI.Core.Entity.Menu", "Menu")
-                        .WithMany("MenuRoles")
-                        .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HantahaAPI.Core.Entity.Role", "Role")
-                        .WithMany("MenuRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Menu");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("HantahaAPI.Core.Entity.User", b =>
@@ -1860,42 +1707,9 @@ namespace HantahaAPI.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HantahaAPI.Core.Entity.UserRole", b =>
-                {
-                    b.HasOne("HantahaAPI.Core.Entity.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HantahaAPI.Core.Entity.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("HantahaAPI.Core.Entity.Country", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.Menu", b =>
-                {
-                    b.Navigation("MenuRoles");
-
-                    b.Navigation("Menus");
-                });
-
-            modelBuilder.Entity("HantahaAPI.Core.Entity.Role", b =>
-                {
-                    b.Navigation("MenuRoles");
-
-                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("HantahaAPI.Core.Entity.User", b =>
@@ -1903,8 +1717,6 @@ namespace HantahaAPI.Data.Migrations
                     b.Navigation("FeedBacks");
 
                     b.Navigation("UserPasswordResetTokens");
-
-                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

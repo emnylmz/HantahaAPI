@@ -33,26 +33,25 @@ namespace HantahaAPI.API.Controllers
             _passwordService = passwordService;
         }
 
-        [HttpGet("GetAll"),Authorize(Roles = "Admin")]
+        [HttpGet("GetAll"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
-            var users = await _userService.GetAllAsync();
-            var userDtos = _mapper.Map<List<UserDto>>(users.ToList());
-            return CreateActionResult(CustomResponseDto<List<UserDto>>.SuccessWithData(userDtos));
+            var users = await _userService.GetAll();
+            var userDtos = _mapper.Map<List<UserCreateDto>>(users.ToList());
+            return CreateActionResult(CustomResponseDto<List<UserCreateDto>>.SuccessWithData(userDtos));
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(UserDto userDto)
+        public async Task<IActionResult> Register(UserCreateDto userCreateDto)
         {
-            //şifre kontrolleri eşit mi güvenli mi vs.
-            if (!_userService.ValidateUserPassword(userDto, out string validationMessage))
+            if (!_userService.ValidateUserPassword(userCreateDto, out string validationMessage))
                 return CreateActionResult(CustomResponseDto<string>.FailWithError(validationMessage));
 
-            var user = _mapper.Map<User>(userDto);
+            var user = _mapper.Map<User>(userCreateDto);
 
             await _userService.AddAsync(user);
 
-            return CreateActionResult(CustomResponseDto<List<UserDto>>.SuccessWithoutData());
+            return CreateActionResult(CustomResponseDto<UserCreateDto>.SuccessWithoutData());
 
         }
 

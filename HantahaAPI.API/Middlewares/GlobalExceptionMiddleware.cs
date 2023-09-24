@@ -22,17 +22,42 @@ namespace HantahaAPI.API
         {
             try
             {
+                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var jwt = tokenHandler.ReadJwtToken(token);
+
+                    // Token geçerliyse ve tarihi geçmemişse devam et
+                    if (!IsTokenValid(jwt))
+                    {
+                        // Token geçersiz veya tarihi geçmişse isteği reddet
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                        ProblemDetails problemDetails = new()
+                        {
+                            Status = (int)HttpStatusCode.Unauthorized,
+                            Type = "Authentication Error",
+                            Title = "Unauthorized",
+                            Detail = "Token is invalid or expired"
+                        };
+
+                        string json = JsonSerializer.Serialize(problemDetails);
+                        context.Response.ContentType = "application/json";
+
+                        await context.Response.WriteAsync(json);
+
+                        return;
+                    }
+                }
+
                 await next(context);
             }
             catch (Exception ex)
             {
-
                 //burada db log işlemi eklenecek
-                //var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-                //var userId = _jwtService.ValidateToken(token);
-                //var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-                //string user = jwt.Claims.First(c => c.Type == CustomClaimTypes.UserId).Value;
-
+                
                 // Kullanıcının IP adresi
                 var ipAddress = GetIpAddress(context);
 
@@ -54,7 +79,7 @@ namespace HantahaAPI.API
                     Status = (int)HttpStatusCode.InternalServerError,
                     Type = "Server Error",
                     Title = "Server Error",
-                    Detail = "Beklenmeyen hata oluştu"
+                    Detail = ex.Message
                 };
 
                 string json = JsonSerializer.Serialize(problemDetails);
@@ -64,7 +89,6 @@ namespace HantahaAPI.API
 
             }
         }
-
         private string GetIpAddress(HttpContext context)
         {
             var ipAddress = context.Connection.RemoteIpAddress;
@@ -82,6 +106,19 @@ namespace HantahaAPI.API
             }
 
             return ipAddress?.ToString();
+        }
+
+        private bool IsTokenValid(JwtSecurityToken jwt)
+        {
+            // Token geçerliliği ve tarih kontrolü burada yapılır
+            if (jwt.ValidTo >= DateTime.UtcNow)
+            {
+                // Token geçerli ise true döner
+                return true;
+            }
+
+            // Token tarihi geçmişse false döner
+            return false;
         }
     }
 }

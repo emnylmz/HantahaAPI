@@ -8,6 +8,7 @@ using HantahaAPI.Core.Entity;
 using HantahaAPI.Data;
 using HantahaAPI.Service.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -46,6 +47,7 @@ builder.Services.AddSwaggerGen(c =>
 
 #region JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+    options.MapInboundClaims = false;
     options.TokenValidationParameters = new TokenValidationParameters {
         ValidateIssuer = true,
             ValidateAudience = true,
@@ -63,7 +65,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options=>{
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireRole("Admin"); // "Admin" rolü gereklidir
+    });
+});
 builder.Services.AddTransient<GlobalExceptionMiddleware>();
 builder.Services.AddAutoMapper(typeof(MapProfile));
 
@@ -82,6 +89,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterModule(new RepoServiceModule()));
+
 
 var app = builder.Build();
 
