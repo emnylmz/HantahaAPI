@@ -36,9 +36,8 @@ namespace HantahaAPI.API.Controllers
         [HttpGet("GetAll"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
-            var users = await _userService.GetAll();
-            var userDtos = _mapper.Map<List<UserCreateDto>>(users.ToList());
-            return CreateActionResult(CustomResponseDto<List<UserCreateDto>>.SuccessWithData(userDtos));
+            var users = await _userService.GetUserList();
+            return CreateActionResult(CustomResponseDto<List<UserListDto>>.SuccessWithData(users));
         }
 
         [HttpPost("Register")]
@@ -51,7 +50,15 @@ namespace HantahaAPI.API.Controllers
 
             await _userService.AddAsync(user);
 
-            return CreateActionResult(CustomResponseDto<UserCreateDto>.SuccessWithoutData());
+            return CreateActionResult(CustomResponseDto<UserUpdateDto>.SuccessWithoutData());
+        }
+
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update(UserUpdateDto userUpdateDto)
+        {
+            await _userService.UpdateAsync(userUpdateDto,UserId);
+
+            return CreateActionResult(CustomResponseDto<UserUpdateDto>.SuccessWithoutData());
 
         }
 

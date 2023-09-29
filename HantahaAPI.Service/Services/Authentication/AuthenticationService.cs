@@ -49,6 +49,9 @@ namespace HantahaAPI.Service.Services
 
             authenticationResponse.Token= new JwtSecurityTokenHandler().WriteToken(token);
             authenticationResponse.IsAdmin = user.IsAdmin;
+            authenticationResponse.Email = user.Email;
+            authenticationResponse.Fullname = user.Firstname+" "+user.Lastname;
+            authenticationResponse.Username = user.Username;
             return authenticationResponse;
         }
 

@@ -29,9 +29,9 @@ namespace HantahaAPI.Service.Services
             return base.AddAsync(entity);
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<List<UserListDto>> GetUserList()
         {
-            return await _userRepository.GetAll();
+            return await _userRepository.GetUserList();
         }
 
         public async Task<bool> CheckPassAndGetUserAsync(LoginDto loginDto)
@@ -87,6 +87,19 @@ namespace HantahaAPI.Service.Services
         private static bool ContainsRequiredCharacters(string password)
         {
             return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$");
+        }
+
+        public async Task UpdateAsync(UserUpdateDto updateDto,int updatedBy)
+        {
+            var user =await _userRepository.GetByIdAsync(updateDto.Id);
+
+            user.UpdatedOn = DateTime.UtcNow;
+            user.UpdatedBy = updatedBy;
+            user.UpdatedOn = DateTime.Now;
+            user.IsActive = updateDto.IsActive;
+            user.IsAdmin = updateDto.IsAdmin;
+
+            _userRepository.Update(user);
         }
     }
 }

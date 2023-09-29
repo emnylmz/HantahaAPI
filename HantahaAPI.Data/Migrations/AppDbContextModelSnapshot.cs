@@ -22,6 +22,26 @@ namespace HantahaAPI.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("HantahaAPI.Core.Entity.BlackListToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlackListToken", (string)null);
+                });
+
             modelBuilder.Entity("HantahaAPI.Core.Entity.Country", b =>
                 {
                     b.Property<int>("Id")
@@ -1590,7 +1610,7 @@ namespace HantahaAPI.Data.Migrations
                     b.Property<int>("CountryId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("CreatedOn")
+                    b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -1635,7 +1655,7 @@ namespace HantahaAPI.Data.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserVisibiltyType")
+                    b.Property<int>("UserVisibilityType")
                         .HasColumnType("integer");
 
                     b.Property<string>("Username")

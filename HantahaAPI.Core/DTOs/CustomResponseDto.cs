@@ -17,12 +17,12 @@ namespace HantahaAPI.Core.DTOs
         //static factory method design pattern
         public static CustomResponseDto<T> SuccessWithData(T data, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
-            return new CustomResponseDto<T> { Data = data, StatusCode = (int)statusCode, Errors = null };
+            return new CustomResponseDto<T> { Data = data, StatusCode = (int)statusCode};
         }
 
         public static CustomResponseDto<T> SuccessWithoutData(HttpStatusCode statusCode = HttpStatusCode.OK)
         {
-            return new CustomResponseDto<T> { StatusCode = (int)statusCode };
+            return new CustomResponseDto<T> { StatusCode = (int)statusCode, Errors = null };
         }
 
         public static CustomResponseDto<T> FailWithErrors(List<string> errors, HttpStatusCode statusCode = HttpStatusCode.BadRequest)

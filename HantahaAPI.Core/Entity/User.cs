@@ -10,16 +10,16 @@ namespace HantahaAPI.Core.Entity
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public int CountryId { get; set; }
+        public string Email { get; set; }
 
 #nullable enable
-        public string? Email { get; set; }
         public DateTime? LastLoginDate { get; set; }
         public string? LastLoginIP { get; set; }
 
 #nullable disable
         public bool IsActive { get; set; }
 
-        public int UserVisibiltyType { get; set; }
+        public int UserVisibilityType { get; set; }
         public bool IsAdmin { get; set; }
         public string LastIV { get; set; }
 

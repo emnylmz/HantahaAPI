@@ -19,7 +19,7 @@ namespace HantahaAPI.Core.DTOs
 #nullable enable
         public string? Email { get; set; }
 
-        public int UserVisibiltyType { get; set; }
+        public int UserVisibilityType { get; set; }
 
 #nullable disable
     }

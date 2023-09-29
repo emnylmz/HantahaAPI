@@ -12,10 +12,12 @@ namespace HantahaAPI.API
     public class GlobalExceptionMiddleware : IMiddleware
     {
         private readonly ILogger _logger;
+        private readonly IBlackListTokenService _blackListTokenService;
 
-        public GlobalExceptionMiddleware(ILogger<GlobalExceptionMiddleware> logger)
+        public GlobalExceptionMiddleware(ILogger<GlobalExceptionMiddleware> logger,IBlackListTokenService blackListTokenService)
         {
             _logger = logger;
+            _blackListTokenService = blackListTokenService;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -24,34 +26,25 @@ namespace HantahaAPI.API
             {
                 var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-                if (!string.IsNullOrEmpty(token))
+                if(!string.IsNullOrEmpty(token))
                 {
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var jwt = tokenHandler.ReadJwtToken(token);
 
-                    // Token geçerliyse ve tarihi geçmemişse devam et
                     if (!IsTokenValid(jwt))
                     {
-                        // Token geçersiz veya tarihi geçmişse isteği reddet
-                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        DenyRequest(context, HttpStatusCode.Unauthorized, "Token is invalid or expired");
+                        return;
+                    }
 
-                        ProblemDetails problemDetails = new()
-                        {
-                            Status = (int)HttpStatusCode.Unauthorized,
-                            Type = "Authentication Error",
-                            Title = "Unauthorized",
-                            Detail = "Token is invalid or expired"
-                        };
+                    bool isInvalidToken = await _blackListTokenService.GetByToken(token);
 
-                        string json = JsonSerializer.Serialize(problemDetails);
-                        context.Response.ContentType = "application/json";
-
-                        await context.Response.WriteAsync(json);
-
+                    if (isInvalidToken)
+                    {
+                        DenyRequest(context, HttpStatusCode.Unauthorized, "Token is invalid or expired");
                         return;
                     }
                 }
-
                 await next(context);
             }
             catch (Exception ex)
@@ -110,8 +103,14 @@ namespace HantahaAPI.API
 
         private bool IsTokenValid(JwtSecurityToken jwt)
         {
+            // Mevcut zamanı kullanmak yerine UTC zamanını kullanın
+            var utcNow = DateTime.UtcNow;
+
+            // Tokenin son kullanma tarihini UTC saat dilimine dönüştürün
+            var validToUtc = jwt.ValidTo.ToUniversalTime();
+
             // Token geçerliliği ve tarih kontrolü burada yapılır
-            if (jwt.ValidTo >= DateTime.UtcNow)
+            if (validToUtc >= utcNow)
             {
                 // Token geçerli ise true döner
                 return true;
@@ -119,6 +118,24 @@ namespace HantahaAPI.API
 
             // Token tarihi geçmişse false döner
             return false;
+        }
+
+        private void DenyRequest(HttpContext context, HttpStatusCode statusCode, string detail)
+        {
+            context.Response.StatusCode = (int)statusCode;
+
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)statusCode,
+                Type = "Authentication Error",
+                Title = "Unauthorized",
+                Detail = detail
+            };
+
+            string json = JsonSerializer.Serialize(problemDetails);
+            context.Response.ContentType = "application/json";
+
+            context.Response.WriteAsync(json);
         }
     }
 }

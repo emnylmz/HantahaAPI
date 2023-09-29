@@ -13,14 +13,15 @@ namespace HantahaAPI.Service.Mapping
 		public MapProfile()
 		{
 			//reverse map iki classında birbirine dönüşebilmesini sağlıyor
-			CreateMap<UserCreateDto, User>()
+			CreateMap<UserUpdateDto, User>()
 				.ReverseMap();
 
+			//CreateMap<UserListDto, User>()
+			//	.ReverseMap()
+			//	.ForMember(d => d.Fullname, d => d.MapFrom(x => string.Format("{0} {1}", x.Firstname, x.Lastname)))
+			//	.ForMember(d => d.Country, d => d.MapFrom(x => x.Country.Name));
 
-
-                //.ForMember(d => d.FullName, d => d.MapFrom(x => string.Format("{0} {1}", x.Firstname, x.Lastname)));
-
-			CreateMap<Claim, AuthenticatedUserDto>();
+            CreateMap<Claim, AuthenticatedUserDto>();
         }
 	}
 }

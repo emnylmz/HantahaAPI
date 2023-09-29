@@ -1,10 +1,12 @@
 ﻿using System.Net;
 using AutoMapper;
 using HantahaAPI.Core.DTOs;
+using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
 using HantahaAPI.Core.Model.Response;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace HantahaAPI.API.Controllers
@@ -13,17 +15,20 @@ namespace HantahaAPI.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IBlackListTokenService _blackListTokenService;
         private readonly IUserService _userService;
 
         public AuthenticationController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             IAuthenticationService authenticationService,
+            IBlackListTokenService blackListTokenService,
             IUserService userService
             ) :base(httpContextAccessor)
         {
             _authenticationService = authenticationService;
             _userService = userService;
+            _blackListTokenService = blackListTokenService;
             _mapper = mapper;
         }
 
@@ -37,6 +42,9 @@ namespace HantahaAPI.API.Controllers
             if (user==null)
                 return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("E-postaya ait kullanıcı bulunamadı."));
 
+            if (!user.IsActive)
+                return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("Kullanıcı  "));
+
             bool passResult = await _userService.CheckPassAndGetUserAsync(loginDto);
 
             //user gelirse şifre doğru
@@ -49,7 +57,7 @@ namespace HantahaAPI.API.Controllers
                 
                 var response = _authenticationService.Login(user);
                 user.LastLoginIP = loginIp;
-                user.LastLoginDate = DateTime.UtcNow;
+                user.LastLoginDate = DateTime.Now;
                 await _userService.UpdateAsync(user);
 
                 return CreateActionResult(CustomResponseDto<AuthenticationResponse>.SuccessWithData(response));
@@ -60,7 +68,11 @@ namespace HantahaAPI.API.Controllers
         [Route("Logout")]
         public async Task<IActionResult> Logout()
         {
-            _authenticationService.LogOut();
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+            BlackListToken blackListToken= new (){Token=token,ExpirationDate=DateTime.Now.AddMinutes(60) };
+
+           await _blackListTokenService.AddAsync(blackListToken);
 
             return CreateActionResult(CustomResponseDto<bool>.SuccessWithoutData());
         }
