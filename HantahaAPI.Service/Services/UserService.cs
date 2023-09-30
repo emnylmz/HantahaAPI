@@ -9,11 +9,13 @@ namespace HantahaAPI.Service.Services
     {
         private readonly IPasswordService _passwordService;
         private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UserService(IGenericRepository<User> repository, IUnitOfWork unitOfWork,
             IPasswordService passwordService,IUserRepository userRepository
             ) : base(repository, unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _passwordService = passwordService;
             _userRepository = userRepository;
         }
@@ -100,6 +102,7 @@ namespace HantahaAPI.Service.Services
             user.IsAdmin = updateDto.IsAdmin;
 
             _userRepository.Update(user);
+            await _unitOfWork.CommitAsync();
         }
     }
 }
