@@ -6,6 +6,7 @@ using System.Text;
 using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Enums;
 using HantahaAPI.Core.Interfaces;
+using HantahaAPI.Core.Model;
 using HantahaAPI.Core.Model.Response;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

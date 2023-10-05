@@ -16,6 +16,8 @@ namespace HantahaAPI.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Country> Country { get; set; }
         public DbSet<SystemLog> SystemLog { get; set; }
+        public DbSet<Language> Language { get; set; }
+        public DbSet<LanguageCountry> LanguageCountry { get; set; }
         //public DbSet<BlackListToken> BlackListToken { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

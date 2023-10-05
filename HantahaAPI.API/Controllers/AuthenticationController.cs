@@ -43,7 +43,7 @@ namespace HantahaAPI.API.Controllers
                 return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("E-postaya ait kullanıcı bulunamadı."));
 
             if (!user.IsActive)
-                return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("Kullanıcı  "));
+                return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("Kullanıcı hesabı pasif durumda."));
 
             bool passResult = await _userService.CheckPassAndGetUserAsync(loginDto);
 

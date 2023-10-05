@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HantahaAPI.Core.Entity
+namespace HantahaAPI.Core.Model
 {
     public class Settings
     {

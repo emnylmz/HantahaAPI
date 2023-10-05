@@ -17,7 +17,9 @@ namespace HantahaAPI.Data
 
         public async Task<List<CountryComboModel>> GetAllCountries()
         {
-            return await _dbSet.Select(i => new CountryComboModel { Id = i.Id, ImageURL = i.ImageURL, Name = i.Name }).OrderBy(i => i.Name).ToListAsync();
+            return await _dbSet.Select(i => 
+            new CountryComboModel { Id = i.Id, ImageURL = i.ImageURL, Name = i.Name }).
+                OrderBy(i => i.Name).ToListAsync();
         }
     }
 }

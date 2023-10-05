@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace HantahaAPI.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : BaseController
     {
         private readonly IMapper _mapper;
@@ -33,7 +35,7 @@ namespace HantahaAPI.API.Controllers
             _passwordService = passwordService;
         }
 
-        [HttpGet("GetAll"), Authorize(Roles = "Admin")]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userService.GetUserList();
