@@ -51,8 +51,8 @@ namespace HantahaAPI.Data
                                 IsActive = l.IsActive,
                                 CreatedOn = l.CreatedOn,
                                 UpdatedOn = l.UpdatedOn,
-                                //CreatedBy = l.CreatedByUser.Firstname + " " + l.CreatedByUser.Lastname,
-                                //UpdatedBy = l.UpdatedByUser != null ? l.UpdatedByUser.Firstname + " " + l.UpdatedByUser.Lastname : null
+                                CreatedBy = l.CreatedByUser.Firstname + " " + l.CreatedByUser.Lastname,
+                                UpdatedBy = l.UpdatedByUser != null ? l.UpdatedByUser.Firstname + " " + l.UpdatedByUser.Lastname : null
                             }).
                 OrderBy(i => i.Name).ToListAsync();
         }
