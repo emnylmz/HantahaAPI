@@ -30,10 +30,10 @@ namespace HantahaAPI.Data
                                 Id = l.Id,
                                 Name = l.Name,
                                 IsActive = l.IsActive,
-                                LanguageCountries = l.LanguageCountries.Select(c => new LanguageCountryModel
+                                LanguageCountries = l.LanguageCountries.Select(c => new CountryComboModel
                                 {
-                                    Id = c.Id,
-                                    CountryId = c.CountryId,
+                                    Id = c.CountryId,
+                                    ImageURL = c.Country.ImageURL,
                                     Name = c.Country.Name
                                 }).ToList(),
                             }).FirstOrDefaultAsync();

@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using HantahaAPI.Core.DTOs;
 using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
-using HantahaAPI.Service.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace HantahaAPI.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class UsersController : BaseController
     {
         private readonly IMapper _mapper;
@@ -36,6 +28,7 @@ namespace HantahaAPI.API.Controllers
         }
 
         [HttpGet("GetAll")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userService.GetUserList();
@@ -56,9 +49,10 @@ namespace HantahaAPI.API.Controllers
         }
 
         [HttpPost("Update")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(UserUpdateDto userUpdateDto)
         {
-            await _userService.UpdateAsync(userUpdateDto,UserId);
+            await _userService.UpdateAsync(userUpdateDto, UserId);
 
             return CreateActionResult(CustomResponseDto<UserUpdateDto>.SuccessWithoutData());
 
