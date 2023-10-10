@@ -18,6 +18,11 @@ namespace HantahaAPI.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<List<LanguageComboModel>> ComboList()
+        {
+            return await _languageRepository.ComboList();
+        }
+
         public async Task<bool> CreateOrUpdate(LanguageCreateOrUpdateModel language, int userId)
         {
             //create

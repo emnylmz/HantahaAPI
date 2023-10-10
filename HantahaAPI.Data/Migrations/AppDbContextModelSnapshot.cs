@@ -1822,6 +1822,90 @@ namespace HantahaAPI.Data.Migrations
                     b.ToTable("UserPasswordResetToken", (string)null);
                 });
 
+            modelBuilder.Entity("HantahaAPI.Core.Entity.Verb", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("Verb", (string)null);
+                });
+
+            modelBuilder.Entity("HantahaAPI.Core.Entity.VerbItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Context")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("VerbId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("VerbId");
+
+                    b.ToTable("VerbItem", (string)null);
+                });
+
             modelBuilder.Entity("HantahaAPI.Core.Entity.Feedback", b =>
                 {
                     b.HasOne("HantahaAPI.Core.Entity.User", "User")
@@ -1891,6 +1975,56 @@ namespace HantahaAPI.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HantahaAPI.Core.Entity.Verb", b =>
+                {
+                    b.HasOne("HantahaAPI.Core.Entity.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HantahaAPI.Core.Entity.User", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("UpdatedByUser");
+                });
+
+            modelBuilder.Entity("HantahaAPI.Core.Entity.VerbItem", b =>
+                {
+                    b.HasOne("HantahaAPI.Core.Entity.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HantahaAPI.Core.Entity.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HantahaAPI.Core.Entity.User", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy");
+
+                    b.HasOne("HantahaAPI.Core.Entity.Verb", "Verb")
+                        .WithMany("VerbItems")
+                        .HasForeignKey("VerbId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Language");
+
+                    b.Navigation("UpdatedByUser");
+
+                    b.Navigation("Verb");
+                });
+
             modelBuilder.Entity("HantahaAPI.Core.Entity.Country", b =>
                 {
                     b.Navigation("Users");
@@ -1906,6 +2040,11 @@ namespace HantahaAPI.Data.Migrations
                     b.Navigation("FeedBacks");
 
                     b.Navigation("UserPasswordResetTokens");
+                });
+
+            modelBuilder.Entity("HantahaAPI.Core.Entity.Verb", b =>
+                {
+                    b.Navigation("VerbItems");
                 });
 #pragma warning restore 612, 618
         }

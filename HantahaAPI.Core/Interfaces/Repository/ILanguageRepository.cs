@@ -6,6 +6,7 @@ namespace HantahaAPI.Core.Interfaces
     public interface ILanguageRepository : IGenericRepository<Language>
     {
         Task<List<LanguageListModel>> List();
+        Task<List<LanguageComboModel>> ComboList();
 
         Task<LanguageWithCountriesModel> GetLanguageWithCountriesAsync(int languageId);
 
