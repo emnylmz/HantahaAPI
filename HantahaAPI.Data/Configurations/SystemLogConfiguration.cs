@@ -1,5 +1,4 @@
-﻿using System;
-using HantahaAPI.Core.Entity;
+﻿using HantahaAPI.Core.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,7 +13,8 @@ namespace HantahaAPI.Data
             builder.Property(x => x.ExceptionMessage).IsRequired();
             builder.Property(x => x.ExceptionSource).IsRequired().HasMaxLength(255);
             builder.Property(x => x.ExceptionUrl).IsRequired().HasMaxLength(255);
-            builder.Property(x => x.ExceptionType).IsRequired().HasMaxLength(255);
+            builder.Property(x => x.RequestQueryString);
+
             builder.ToTable("SystemLog");
         }
     }

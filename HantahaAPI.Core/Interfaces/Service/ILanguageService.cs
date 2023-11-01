@@ -7,7 +7,7 @@ namespace HantahaAPI.Core.Interfaces
     public interface ILanguageService : IService<Language>
     {
         Task<List<LanguageListModel>> List();
-        Task<List<LanguageComboModel>> ComboList();
+        Task<List<ComboModel>> ComboList();
         Task<LanguageWithCountriesModel> GetLanguageWithCountriesAsync(int languageId);
         Task<bool> CreateOrUpdate(LanguageCreateOrUpdateModel language, int userId);
     }

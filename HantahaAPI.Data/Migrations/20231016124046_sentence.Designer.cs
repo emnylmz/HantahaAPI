@@ -3,6 +3,7 @@ using System;
 using HantahaAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HantahaAPI.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231016124046_sentence")]
+    partial class sentence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1773,29 +1776,6 @@ namespace HantahaAPI.Data.Migrations
                     b.ToTable("SentenceItem", (string)null);
                 });
 
-            modelBuilder.Entity("HantahaAPI.Core.Entity.SentenceVerb", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("SentenceId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("VerbId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SentenceId");
-
-                    b.HasIndex("VerbId");
-
-                    b.ToTable("SentenceVerb", (string)null);
-                });
-
             modelBuilder.Entity("HantahaAPI.Core.Entity.SystemLog", b =>
                 {
                     b.Property<int>("Id")
@@ -1816,19 +1796,15 @@ namespace HantahaAPI.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("ExceptionUrl")
+                    b.Property<string>("ExceptionType")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("HeaderString")
-                        .HasColumnType("text");
-
-                    b.Property<string>("IpAddress")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RequestQueryString")
-                        .HasColumnType("text");
+                    b.Property<string>("ExceptionUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
@@ -1958,6 +1934,9 @@ namespace HantahaAPI.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
+                    b.Property<int?>("SentenceId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("integer");
 
@@ -1967,6 +1946,8 @@ namespace HantahaAPI.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("SentenceId");
 
                     b.HasIndex("UpdatedBy");
 
@@ -2114,25 +2095,6 @@ namespace HantahaAPI.Data.Migrations
                     b.Navigation("UpdatedByUser");
                 });
 
-            modelBuilder.Entity("HantahaAPI.Core.Entity.SentenceVerb", b =>
-                {
-                    b.HasOne("HantahaAPI.Core.Entity.Sentence", "Sentence")
-                        .WithMany("SentenceVerbs")
-                        .HasForeignKey("SentenceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HantahaAPI.Core.Entity.Verb", "Verb")
-                        .WithMany()
-                        .HasForeignKey("VerbId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sentence");
-
-                    b.Navigation("Verb");
-                });
-
             modelBuilder.Entity("HantahaAPI.Core.Entity.User", b =>
                 {
                     b.HasOne("HantahaAPI.Core.Entity.Country", "Country")
@@ -2162,6 +2124,10 @@ namespace HantahaAPI.Data.Migrations
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("HantahaAPI.Core.Entity.Sentence", null)
+                        .WithMany("Verbs")
+                        .HasForeignKey("SentenceId");
 
                     b.HasOne("HantahaAPI.Core.Entity.User", "UpdatedByUser")
                         .WithMany()
@@ -2219,7 +2185,7 @@ namespace HantahaAPI.Data.Migrations
                 {
                     b.Navigation("SentenceItems");
 
-                    b.Navigation("SentenceVerbs");
+                    b.Navigation("Verbs");
                 });
 
             modelBuilder.Entity("HantahaAPI.Core.Entity.User", b =>

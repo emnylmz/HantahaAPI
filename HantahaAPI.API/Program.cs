@@ -1,18 +1,15 @@
-﻿using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HantahaAPI.API;
 using HantahaAPI.Core.Model;
 using HantahaAPI.Data;
 using HantahaAPI.Service.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,18 +43,26 @@ builder.Services.AddSwaggerGen(c =>
 #endregion
 
 #region JWT
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
     options.MapInboundClaims = false;
-    options.TokenValidationParameters = new TokenValidationParameters {
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
         ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = settings.JWTSettings.Issuer,
-            ValidAudience = settings.JWTSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JWTSettings.SecretKey))
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = settings.JWTSettings.Issuer,
+        ValidAudience = settings.JWTSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JWTSettings.SecretKey))
     };
-});
+})
+.AddCertificate();
 #endregion
 
 builder.Services.AddCors(options =>
@@ -65,7 +70,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
-builder.Services.AddAuthorization(options=>{
+builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("AdminPolicy", policy =>
     {
         policy.RequireRole("Admin"); // "Admin" rolü gereklidir

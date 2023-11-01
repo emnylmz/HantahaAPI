@@ -9,49 +9,47 @@ using Microsoft.AspNetCore.Mvc;
 namespace HantahaAPI.API.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class VerbController : BaseController
+    public class SentenceController : BaseController
     {
         private readonly IMapper _mapper;
-        private readonly IVerbService _verbService;
+        private readonly ISentenceService _sentenceService;
 
-        public VerbController(
+        public SentenceController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             IConfiguration configuration,
-            IVerbService verbService
+            ISentenceService sentenceService
             ) : base(httpContextAccessor)
         {
             _mapper = mapper;
-            _verbService = verbService;
+            _sentenceService = sentenceService;
         }
 
         [HttpGet("List")]
         public async Task<IActionResult> List()
         {
-            var languages = await _verbService.List();
-            return CreateActionResult(CustomResponseDto<List<VerbListModel>>.SuccessWithData(languages));
+            var sentences = await _sentenceService.List();
+            return CreateActionResult(CustomResponseDto<List<SentenceListModel>>.SuccessWithData(sentences));
         }
 
         [HttpPost("CreateOrUpdate")]
-        public async Task<IActionResult> CreateOrUpdate(VerbCreateOrUpdateModel request)
+        public async Task<IActionResult> CreateOrUpdate(SentenceCreateOrUpdateModel request)
         {
-            bool result = await _verbService.CreateOrUpdate(request, UserId);
+            bool result = await _sentenceService.CreateOrUpdate(request, UserId);
 
             if (result)
                 return CreateActionResult(CustomResponseDto<List<LanguageListModel>>.SuccessWithoutData());
             else
                 return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("işlem sırasında hata oluştu."));
 
-
         }
 
         [HttpPost("SetIsDeleted")]
         public async Task<IActionResult> SetIsDeleted(IdModel request)
         {
-            //burada is deleted alanı eklenebilir
-            var verb = await _verbService.GetByIdAsync(request.Id);
-            verb.IsDeleted = !verb.IsDeleted;
-            await _verbService.UpdateAsync(verb);
+            var sentence = await _sentenceService.GetByIdAsync(request.Id);
+            sentence.IsDeleted = !sentence.IsDeleted;
+            await _sentenceService.UpdateAsync(sentence);
 
             return CreateActionResult(CustomResponseDto<bool>.SuccessWithoutData());
         }
@@ -59,16 +57,9 @@ namespace HantahaAPI.API.Controllers
         [HttpPost("Get")]
         public async Task<IActionResult> Get(IdModel request)
         {
-            var verb = await _verbService.GetVerbWithVerbItemsAsync(request.Id);
+            var sentence = await _sentenceService.GetSentenceWithItemsAsync(request.Id);
 
-            return CreateActionResult(CustomResponseDto<VerbCreateOrUpdateModel>.SuccessWithData(verb));
-        }
-
-        [HttpGet("ComboList")]
-        public async Task<IActionResult> ComboList()
-        {
-            var verbs = await _verbService.ComboList();
-            return CreateActionResult(CustomResponseDto<List<ComboModel>>.SuccessWithData(verbs));
+            return CreateActionResult(CustomResponseDto<SentenceWithVerbsModel>.SuccessWithData(sentence));
         }
 
     }

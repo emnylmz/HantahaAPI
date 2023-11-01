@@ -1,23 +1,22 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Text.Json;
+﻿using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Enums;
 using HantahaAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Text.Json;
 
 namespace HantahaAPI.API
 {
     public class GlobalExceptionMiddleware : IMiddleware
     {
-        private readonly ILogger _logger;
         private readonly IBlackListTokenService _blackListTokenService;
+        private readonly ISystemLogService _systemLogService;
 
-        public GlobalExceptionMiddleware(ILogger<GlobalExceptionMiddleware> logger,IBlackListTokenService blackListTokenService)
+        public GlobalExceptionMiddleware(IBlackListTokenService blackListTokenService, ISystemLogService systemLogService)
         {
-            _logger = logger;
             _blackListTokenService = blackListTokenService;
+            _systemLogService = systemLogService;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -26,7 +25,9 @@ namespace HantahaAPI.API
             {
                 var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-                if(!string.IsNullOrEmpty(token))
+                var ipAddress = GetIpAddress(context);
+
+                if (!string.IsNullOrEmpty(token))
                 {
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var jwt = tokenHandler.ReadJwtToken(token);
@@ -49,21 +50,40 @@ namespace HantahaAPI.API
             }
             catch (Exception ex)
             {
-                //burada db log işlemi eklenecek
-                
+
+                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                string userId = null;
+
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var jwt = tokenHandler.ReadJwtToken(token);
+                    var userIdClaim = jwt.Claims.FirstOrDefault(claim => claim.Type == CustomClaimTypes.UserId);
+
+                    userId = userIdClaim?.Value;
+                }
+
+
                 // Kullanıcının IP adresi
                 var ipAddress = GetIpAddress(context);
-
-                //request header
                 var headers = context.Request.Headers;
                 var headersString = string.Join("; ", headers.Select(h => $"{h.Key}: {h.Value}"));
-
-                //diğer bilgiler
-                var requestMethod = context.Request.Method;
                 var requestPath = context.Request.Path;
                 var requestQueryString = context.Request.QueryString;
 
-                _logger.LogError(ex, ex.Message);
+                await _systemLogService.AddAsync(
+                    new SystemLog
+                    {
+                        Date = DateTime.Now,
+                        UserId = string.IsNullOrWhiteSpace(userId) ? null : Convert.ToInt32(userId),
+                        ExceptionMessage = ex.Message,
+                        ExceptionSource = ex.Source,
+                        RequestQueryString = requestQueryString.ToString(),
+                        IpAddress = ipAddress,
+                        ExceptionUrl = requestPath,
+                        HeaderString = headersString,
+                    });
 
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
@@ -72,7 +92,7 @@ namespace HantahaAPI.API
                     Status = (int)HttpStatusCode.InternalServerError,
                     Type = "Server Error",
                     Title = "Server Error",
-                    Detail = ex.Message
+                    Detail = "Hata sizde değil bizde."
                 };
 
                 string json = JsonSerializer.Serialize(problemDetails);

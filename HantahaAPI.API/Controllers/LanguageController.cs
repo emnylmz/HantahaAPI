@@ -36,7 +36,7 @@ namespace HantahaAPI.API.Controllers
         public async Task<IActionResult> ComboList()
         {
             var languages = await _languageService.ComboList();
-            return CreateActionResult(CustomResponseDto<List<LanguageComboModel>>.SuccessWithData(languages));
+            return CreateActionResult(CustomResponseDto<List<ComboModel>>.SuccessWithData(languages));
         }
 
         [HttpPost("CreateOrUpdate")]

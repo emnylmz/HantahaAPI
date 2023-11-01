@@ -13,13 +13,13 @@ namespace HantahaAPI.Data
             _dbSet = context.Set<Language>();
         }
 
-        public async Task<List<LanguageComboModel>> ComboList()
+        public async Task<List<ComboModel>> ComboList()
         {
             return await
                 _dbSet
                 .Where(x => x.IsActive == true)
                 .Select(l =>
-                            new LanguageComboModel
+                            new ComboModel
                             {
                                 Id = l.Id,
                                 Name = l.Name,

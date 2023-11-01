@@ -18,6 +18,8 @@ namespace HantahaAPI.Data
         public DbSet<Language> Language { get; set; }
         public DbSet<Verb> Verb { get; set; }
         public DbSet<VerbItem> VerbItem { get; set; }
+        public DbSet<Sentence> Sentence { get; set; }
+        public DbSet<SentenceItem> SentenceItem { get; set; }
         public DbSet<LanguageCountry> LanguageCountry { get; set; }
         //public DbSet<BlackListToken> BlackListToken { get; set; }
 

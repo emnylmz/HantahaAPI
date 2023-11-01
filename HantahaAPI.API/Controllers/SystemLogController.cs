@@ -2,32 +2,33 @@
 using HantahaAPI.Core.DTOs;
 using HantahaAPI.Core.Interfaces;
 using HantahaAPI.Core.Model.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace HantahaAPI.API.Controllers
 {
-    public class CountryController : BaseController
+    [Authorize(Roles = "Admin")]
+    public class SystemLogController : BaseController
     {
         private readonly IMapper _mapper;
-        private readonly ICountryService _countryService;
+        private readonly ISystemLogService _systemLogService;
 
-        public CountryController(
+        public SystemLogController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
-            IConfiguration configuration,
-            ICountryService countryService
+            ISystemLogService systemLogService
             ) : base(httpContextAccessor)
         {
             _mapper = mapper;
-            _countryService = countryService;
+            _systemLogService = systemLogService;
         }
 
-        [HttpGet("GetAllCountries")]
+        [HttpGet("List")]
         public async Task<IActionResult> GetAllCountries()
         {
-            var allCountries = await _countryService.GetAllCountries();
-            return CreateActionResult(CustomResponseDto<List<CountryComboModel>>.SuccessWithData(allCountries));
+            var errors = await _systemLogService.List();
+            return CreateActionResult(CustomResponseDto<List<SystemLogListModel>>.SuccessWithData(errors));
         }
 
     }

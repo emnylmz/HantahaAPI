@@ -8,8 +8,9 @@ namespace HantahaAPI.Core.Interfaces
     {
         //bakılack
         Task<List<VerbListModel>> List();
-        Task<VerbCreateOrUpdateModel> GetVerbIncludeLanguagesAsync(int verbId);
+        Task<VerbCreateOrUpdateModel> GetVerbWithVerbItemsAsync(int verbId);
         Task<bool> CreateOrUpdate(VerbCreateOrUpdateModel verb, int userId);
+        Task<List<ComboModel>> ComboList();
     }
 }
 
