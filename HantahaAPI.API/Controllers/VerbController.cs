@@ -13,16 +13,18 @@ namespace HantahaAPI.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IVerbService _verbService;
+        private readonly IVerbItemService _verbItemService;
 
         public VerbController(
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
-            IConfiguration configuration,
-            IVerbService verbService
+            IVerbService verbService,
+            IVerbItemService verbItemService
             ) : base(httpContextAccessor)
         {
             _mapper = mapper;
             _verbService = verbService;
+            _verbItemService = verbItemService;
         }
 
         [HttpGet("List")]
@@ -69,6 +71,14 @@ namespace HantahaAPI.API.Controllers
         {
             var verbs = await _verbService.ComboList();
             return CreateActionResult(CustomResponseDto<List<ComboModel>>.SuccessWithData(verbs));
+        }
+
+        [HttpPost("GetUserVerbList")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUserVerbList(GetUserVerbSearchRequest request)
+        {
+            var verbs = await _verbItemService.GetUserVerbList(request.PageNumber, request.Search);
+            return CreateActionResult(CustomResponseDto<UserVerbListModel>.SuccessWithData(verbs));
         }
 
     }

@@ -11,6 +11,7 @@ namespace HantahaAPI.Core.Entity
         public bool IsDeleted { get; set; }
 
         public ICollection<VerbItem> VerbItems { get; set; }
+        public ICollection<SentenceVerb> SentenceVerbs { get; set; }
 
         [ForeignKey("CreatedBy")]
         public User CreatedByUser { get; set; }
