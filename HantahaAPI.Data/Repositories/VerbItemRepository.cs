@@ -15,15 +15,15 @@ namespace HantahaAPI.Data
 
         public async Task<UserVerbListModel> GetUserVerbList(int pageNumber, string search)
         {
-            int pageSize = 6;
+            int pageSize = 8;
 
             var query = _dbSet.Include(vi => vi.Verb)
                 .Include(vi => vi.Language).ThenInclude(l => l.LanguageCountries).ThenInclude(lc => lc.Country)
                 .Include(vi => vi.Verb).ThenInclude(v => v.SentenceVerbs).ThenInclude(sv => sv.Sentence).ThenInclude(s => s.SentenceItems).ThenInclude(si => si.Language)
-                .Where(v => v.Verb.IsActive && !v.Verb.IsDeleted &&
+                .Where(vi => vi.Verb.IsActive && !vi.Verb.IsDeleted && vi.Language.Name != "Türkçe" &&
                  (
-                    v.Context.Contains(search) ||
-                    v.Verb.SentenceVerbs.Any(sv => sv.Sentence.SentenceItems.Any(si => si.Context.ToLower().Contains(search.ToLower()) && si.Language.Name == v.Language.Name))
+                    vi.Context.Contains(search) ||
+                    vi.Verb.SentenceVerbs.Any(sv => sv.Sentence.SentenceItems.Any(si => si.Context.ToLower().Contains(search.ToLower()) && si.Language.Name == vi.Language.Name))
                  ));
 
             // Son eklenenlere göre sıralama ekleyin
