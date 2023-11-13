@@ -21,7 +21,8 @@ namespace HantahaAPI.Data
         public DbSet<Sentence> Sentence { get; set; }
         public DbSet<SentenceItem> SentenceItem { get; set; }
         public DbSet<LanguageCountry> LanguageCountry { get; set; }
-        //public DbSet<BlackListToken> BlackListToken { get; set; }
+
+        public DbSet<TokenTracker> TokenTrackers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

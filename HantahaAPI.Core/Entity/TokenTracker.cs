@@ -1,12 +1,10 @@
-﻿
-using System.Numerics;
-
-namespace HantahaAPI.Core.Entity
+﻿namespace HantahaAPI.Core.Entity
 {
-    public class BlackListToken
+    public class TokenTracker
     {
         public int Id { get; set; }
         public string Token { get; set; }
+        public int UserId { get; set; }
         public DateTime ExpirationDate { get; set; }
     }
 }

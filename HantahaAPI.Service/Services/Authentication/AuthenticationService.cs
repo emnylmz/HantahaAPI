@@ -1,15 +1,13 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Runtime;
-using System.Security.Claims;
-using System.Text;
-using HantahaAPI.Core.Entity;
+﻿using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Enums;
 using HantahaAPI.Core.Interfaces;
 using HantahaAPI.Core.Model;
 using HantahaAPI.Core.Model.Response;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace HantahaAPI.Service.Services
 {
@@ -22,12 +20,12 @@ namespace HantahaAPI.Service.Services
             _settings = settings.Value;
         }
 
-        public AuthenticationResponse Login(User user)
+        public AuthenticationResponse Login(User user, out DateTime expirationDate)
         {
-            return GenerateToken(user);
+            return GenerateToken(user, out expirationDate);
         }
 
-        private AuthenticationResponse GenerateToken(User user)
+        private AuthenticationResponse GenerateToken(User user, out DateTime expirationDate)
         {
             AuthenticationResponse authenticationResponse = new();
 
@@ -48,11 +46,13 @@ namespace HantahaAPI.Service.Services
                 expires: expireDate,
                 signingCredentials: credentials);
 
-            authenticationResponse.Token= new JwtSecurityTokenHandler().WriteToken(token);
+            authenticationResponse.Token = new JwtSecurityTokenHandler().WriteToken(token);
             authenticationResponse.IsAdmin = user.IsAdmin;
             authenticationResponse.Email = user.Email;
-            authenticationResponse.Fullname = user.Firstname+" "+user.Lastname;
+            authenticationResponse.Firstname = user.Firstname;
+            authenticationResponse.Lastname = user.Lastname;
             authenticationResponse.Username = user.Username;
+            expirationDate = expireDate;
             return authenticationResponse;
         }
 

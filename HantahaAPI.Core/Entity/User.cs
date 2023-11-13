@@ -1,5 +1,4 @@
-﻿using System;
-using HantahaAPI.Core.Model;
+﻿using HantahaAPI.Core.Model;
 
 namespace HantahaAPI.Core.Entity
 {
@@ -11,6 +10,7 @@ namespace HantahaAPI.Core.Entity
         public string Lastname { get; set; }
         public int CountryId { get; set; }
         public string Email { get; set; }
+        public Guid ForgotPasswordKey { get; set; }
 
 #nullable enable
         public DateTime? LastLoginDate { get; set; }

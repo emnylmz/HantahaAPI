@@ -10,12 +10,12 @@ namespace HantahaAPI.API
 {
     public class GlobalExceptionMiddleware : IMiddleware
     {
-        private readonly IBlackListTokenService _blackListTokenService;
+        private readonly ITokenTrackerService _tokenTrackerService;
         private readonly ISystemLogService _systemLogService;
 
-        public GlobalExceptionMiddleware(IBlackListTokenService blackListTokenService, ISystemLogService systemLogService)
+        public GlobalExceptionMiddleware(ITokenTrackerService tokenTrackerService, ISystemLogService systemLogService)
         {
-            _blackListTokenService = blackListTokenService;
+            _tokenTrackerService = tokenTrackerService;
             _systemLogService = systemLogService;
         }
 
@@ -34,15 +34,15 @@ namespace HantahaAPI.API
 
                     if (!IsTokenValid(jwt))
                     {
-                        DenyRequest(context, HttpStatusCode.Unauthorized, "Token is invalid or expired");
+                        DenyRequest(context, HttpStatusCode.Unauthorized, "Token is invalid");
                         return;
                     }
 
-                    bool isInvalidToken = await _blackListTokenService.GetByToken(token);
+                    TokenTracker tokenTracker = await _tokenTrackerService.GetByToken(token);
 
-                    if (isInvalidToken)
+                    if (tokenTracker == null)
                     {
-                        DenyRequest(context, HttpStatusCode.Unauthorized, "Token is invalid or expired");
+                        DenyRequest(context, HttpStatusCode.Unauthorized, "Token is expired");
                         return;
                     }
                 }

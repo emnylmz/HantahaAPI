@@ -25,7 +25,7 @@ namespace HantahaAPI.API.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<IActionResult> GetAllCountries()
+        public async Task<IActionResult> List()
         {
             var errors = await _systemLogService.List();
             return CreateActionResult(CustomResponseDto<List<SystemLogListModel>>.SuccessWithData(errors));

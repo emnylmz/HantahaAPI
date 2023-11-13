@@ -42,7 +42,7 @@ namespace HantahaAPI.API.Controllers
                 return CreateActionResult(CustomResponseDto<string>.FailWithError(validationMessage));
 
             var user = _mapper.Map<User>(userCreateDto);
-
+            user.ForgotPasswordKey = new Guid();
             await _userService.AddAsync(user);
 
             return CreateActionResult(CustomResponseDto<UserUpdateDto>.SuccessWithoutData());
