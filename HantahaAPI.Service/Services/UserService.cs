@@ -1,6 +1,7 @@
 ﻿using HantahaAPI.Core.DTOs;
 using HantahaAPI.Core.Entity;
 using HantahaAPI.Core.Interfaces;
+using HantahaAPI.Core.Model.Request;
 using System.Text.RegularExpressions;
 
 namespace HantahaAPI.Service.Services
@@ -12,7 +13,7 @@ namespace HantahaAPI.Service.Services
         private readonly IUnitOfWork _unitOfWork;
 
         public UserService(IGenericRepository<User> repository, IUnitOfWork unitOfWork,
-            IPasswordService passwordService,IUserRepository userRepository
+            IPasswordService passwordService, IUserRepository userRepository
             ) : base(repository, unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -53,6 +54,20 @@ namespace HantahaAPI.Service.Services
             return await _userRepository.GetByEmail(email);
         }
 
+        public async Task ResetPassword(ResetPasswordRequestDto request)
+        {
+
+            Guid resetGuid = new Guid(request.ResetToken);
+            User user = await _userRepository.GetByResetToken(resetGuid);
+
+            string newPass = _passwordService.EncryptPassword(request.Password, user.LastIV);
+            user.Password = newPass;
+            user.UpdatedOn = DateTime.Now;
+            user.ResetToken = null;
+            user.LastCreationDateOfResetToken = null;
+            await _unitOfWork.CommitAsync();
+        }
+
 
         public bool ValidateUserPassword(UserCreateDto userCreateDto, out string errorMessage)
         {
@@ -91,9 +106,9 @@ namespace HantahaAPI.Service.Services
             return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$");
         }
 
-        public async Task UpdateAsync(UserUpdateDto updateDto,int updatedBy)
+        public async Task UpdateAsync(UserUpdateDto updateDto, int updatedBy)
         {
-            var user =await _userRepository.GetByIdAsync(updateDto.Id);
+            var user = await _userRepository.GetByIdAsync(updateDto.Id);
 
             user.UpdatedOn = DateTime.UtcNow;
             user.UpdatedBy = updatedBy;

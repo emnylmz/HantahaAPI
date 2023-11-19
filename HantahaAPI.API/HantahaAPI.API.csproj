@@ -35,4 +35,7 @@
   <ItemGroup>
     <Folder Include="Modules\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\EmailTemplates\ForgotPassword.html" />
+  </ItemGroup>
 </Project>

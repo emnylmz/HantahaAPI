@@ -6,6 +6,7 @@ using HantahaAPI.Data;
 using HantahaAPI.Service.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -96,8 +97,14 @@ builder.Services.AddHttpContextAccessor();
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterModule(new RepoServiceModule()));
 
-
 var app = builder.Build();
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new
+        PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"EmailTemplates")),
+    RequestPath = new PathString("/EmailTemplates")
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

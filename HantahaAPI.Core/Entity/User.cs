@@ -10,11 +10,12 @@ namespace HantahaAPI.Core.Entity
         public string Lastname { get; set; }
         public int CountryId { get; set; }
         public string Email { get; set; }
-        public Guid ForgotPasswordKey { get; set; }
 
 #nullable enable
         public DateTime? LastLoginDate { get; set; }
         public string? LastLoginIP { get; set; }
+        public DateTime? LastCreationDateOfResetToken { get; set; }
+        public Guid? ResetToken { get; set; }
 
 #nullable disable
         public bool IsActive { get; set; }
@@ -24,7 +25,6 @@ namespace HantahaAPI.Core.Entity
         public string LastIV { get; set; }
 
         public ICollection<Feedback> FeedBacks { get; set; }
-        public ICollection<UserPasswordResetToken> UserPasswordResetTokens { get; set; }
 
         public Country Country { get; set; }
     }

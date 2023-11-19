@@ -5,18 +5,18 @@ namespace HantahaAPI.Service.Services
 {
     public class TokenTrackerService : BaseService<TokenTracker>, ITokenTrackerService
     {
-        private readonly ITokenTrackerRepository _blackListTokenRepository;
+        private readonly ITokenTrackerRepository _tokenTrackerRepository;
 
         public TokenTrackerService(IGenericRepository<TokenTracker> repository, IUnitOfWork unitOfWork,
-            ITokenTrackerRepository blackListTokenRepository
+            ITokenTrackerRepository tokenTrackerRepository
             ) : base(repository, unitOfWork)
         {
-            _blackListTokenRepository = blackListTokenRepository;
+            _tokenTrackerRepository = tokenTrackerRepository;
         }
 
         public async Task<TokenTracker> GetByToken(string token)
         {
-            return await _blackListTokenRepository.GetByToken(token);
+            return await _tokenTrackerRepository.GetByToken(token);
         }
     }
 }
