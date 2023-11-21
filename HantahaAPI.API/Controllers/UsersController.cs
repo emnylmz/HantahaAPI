@@ -65,8 +65,13 @@ namespace HantahaAPI.API.Controllers
                 return CreateActionResult(CustomResponseDto<string>.FailWithError("Size şifre sıfırlama maili göndermiştik. Lütfen mail ve spam kutunuzu kontrol ediniz.", HttpStatusCode.OK));
 
             string body = string.Empty;
+
+            var hostingEnvironment = HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+            var wwwrootPath = hostingEnvironment.WebRootPath;
+            var filePath = Path.Combine(wwwrootPath, "EmailTemplates", "ForgotPassword.html");
+
             //using streamreader for reading my htmltemplate
-            using (StreamReader reader = new StreamReader(Path.Combine("wwwroot\\EmailTemplates", "ForgotPassword.html")))
+            using (StreamReader reader = new StreamReader(filePath))
             {
                 body = reader.ReadToEnd();
             }
@@ -80,13 +85,16 @@ namespace HantahaAPI.API.Controllers
             body = body.Replace("{0}", fullName);
             body = body.Replace("{1}", token);
 
-            await _mailService.SendMailAsync(new MailDataDto
+            MailDataDto mailDataDto = new MailDataDto
             {
+
                 EmailSubject = "Hantaha | Şifremi Unuttum",
                 Email = requestDto.Email,
                 EmailBody = body,
                 EmailToName = user.Firstname + " " + user.Lastname
-            }); ;
+            };
+
+            await Task.Run(() => _mailService.SendMailAsync(mailDataDto));
 
             await _userService.UpdateAsync(user);
 

@@ -102,8 +102,8 @@ var app = builder.Build();
 app.UseStaticFiles(new StaticFileOptions()
 {
     FileProvider = new
-        PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"EmailTemplates")),
-    RequestPath = new PathString("/EmailTemplates")
+        PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+    RequestPath = new PathString("/wwwroot")
 });
 
 // Configure the HTTP request pipeline.
