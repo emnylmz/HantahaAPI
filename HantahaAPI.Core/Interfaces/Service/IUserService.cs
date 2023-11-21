@@ -7,6 +7,8 @@ namespace HantahaAPI.Core.Interfaces
     public interface IUserService : IService<User>
     {
         Task<User> GetByEmail(string email);
+        Task<bool> CheckByResetToken(Guid token);
+        Task<User> GetByResetToken(Guid token);
         Task ResetPassword(ResetPasswordRequestDto request);
         Task<List<UserListDto>> GetUserList();
         Task<bool> CheckPassAndGetUserAsync(LoginDto loginDto);

@@ -41,6 +41,11 @@ namespace HantahaAPI.Data
             return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public async Task<bool> CheckByResetToken(Guid token)
+        {
+            return await _dbSet.FirstOrDefaultAsync(u => u.ResetToken == token) != null ? true : false;
+        }
+
         public async Task<User> GetByResetToken(Guid resetToken)
         {
             return await _dbSet.FirstOrDefaultAsync(u => u.ResetToken == resetToken);

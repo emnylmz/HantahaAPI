@@ -54,6 +54,16 @@ namespace HantahaAPI.Service.Services
             return await _userRepository.GetByEmail(email);
         }
 
+        public async Task<bool> CheckByResetToken(Guid token)
+        {
+            return await _userRepository.CheckByResetToken(token);
+        }
+
+        public async Task<User> GetByResetToken(Guid token)
+        {
+            return await _userRepository.GetByResetToken(token);
+        }
+
         public async Task ResetPassword(ResetPasswordRequestDto request)
         {
 

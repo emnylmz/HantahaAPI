@@ -101,6 +101,24 @@ namespace HantahaAPI.API.Controllers
             return CreateActionResult(CustomResponseDto<UserUpdateDto>.SuccessWithoutData());
         }
 
+        [HttpPost("CheckResetToken")]
+        public async Task<IActionResult> CheckResetToken(CheckResetTokenRequestDto requestDto)
+        {
+            Guid guidResult;
+
+            bool isValid = Guid.TryParse(requestDto.Token, out guidResult);
+            if (!isValid)
+                return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("NOT_FOUND", HttpStatusCode.OK));
+
+
+            User user = await _userService.GetByResetToken(guidResult);
+
+            if (user == null || user.LastCreationDateOfResetToken == null || user.LastCreationDateOfResetToken.Value.AddHours(2) < DateTime.Now)
+                return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("NOT_FOUND", HttpStatusCode.OK));
+
+            return CreateActionResult(CustomResponseDto<UserUpdateDto>.SuccessWithoutData());
+        }
+
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto requestDto)
         {
@@ -112,6 +130,12 @@ namespace HantahaAPI.API.Controllers
 
             if (requestDto.Password != requestDto.RepeatPassword)
                 return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("Şifre ve şifre tekrar alanları eşleşmiyor.", HttpStatusCode.OK));
+
+            Guid guidResult;
+
+            bool isValid = Guid.TryParse(requestDto.ResetToken, out guidResult);
+            if (!isValid)
+                return CreateActionResult(CustomResponseDto<List<string>>.FailWithError("Bir hata oluştu.", HttpStatusCode.OK));
 
             await _userService.ResetPassword(requestDto);
 

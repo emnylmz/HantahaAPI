@@ -9,6 +9,7 @@ namespace HantahaAPI.Core.Interfaces
         Task<List<UserListDto>> GetUserList();
         Task<User> GetByEmail(string email);
         Task<User> GetByResetToken(Guid resetToken);
+        Task<bool> CheckByResetToken(Guid resetToken);
     }
 }
 
