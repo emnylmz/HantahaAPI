@@ -30,6 +30,7 @@ namespace HantahaAPI.Service.Services
             {
                 Language entinty = new();
                 entinty.Name = language.Name;
+                entinty.EnglishName = language.EnglishName;
                 entinty.IsActive = language.IsActive;
                 entinty.CreatedOn = DateTime.Now;
                 entinty.CreatedBy = userId;
@@ -61,6 +62,7 @@ namespace HantahaAPI.Service.Services
                 entity.IsActive = language.IsActive;
                 entity.UpdatedOn = DateTime.Now;
                 entity.UpdatedBy = userId;
+                entity.EnglishName = language.EnglishName;
 
                 entity.LanguageCountries.Clear();
                 foreach (var countryId in language.LanguageCountries)

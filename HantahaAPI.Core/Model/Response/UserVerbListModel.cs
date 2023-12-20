@@ -12,6 +12,7 @@
         public int VerbItemId { get; set; }
         public string Context { get; set; } // fiil
         public string LanguageName { get; set; } //dil
+        public string TurkishContext { get; set; } //dil
         public List<CountryModel> CountryModel { get; set; } //ülkeler
         public List<SentenceModel> Sentences { get; set; } //cümleler sadece o dile aitler gelmeli
     }
@@ -27,6 +28,8 @@
     {
         public string LanguageName { get; set; }
         public string Context { get; set; }
+
+        public List<CountryModel> CountryModel { get; set; } //ülkeler
     }
 
 }

@@ -43,6 +43,7 @@ namespace HantahaAPI.Data
                             {
                                 Id = l.Id,
                                 Name = l.Name,
+                                EnglishName = l.EnglishName,
                                 IsActive = l.IsActive,
                                 LanguageCountries = l.LanguageCountries.Select(c => new CountryComboModel
                                 {
