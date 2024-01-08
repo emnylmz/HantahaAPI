@@ -63,7 +63,7 @@ namespace HantahaAPI.Data
             Sentences = vi.Verb.SentenceVerbs
                 .Where(sv => !sv.Sentence.IsDeleted && sv.Sentence.IsActive /*&& sv.Sentence.SentenceItems.Any(si => si.Context.ToLower().Contains(search.ToLower()) && si.Language.Name == vi.Language.Name)*/)
                 .SelectMany(sv => sv.Sentence.SentenceItems)
-                .GroupBy(si => si.Language.Name) // Dil bazında grupla
+                .GroupBy(si => si.Language.EnglishName) // Dil bazında grupla
                 .Select(group => new SentenceModel
                 {
                     Context = string.Join("\n", group.Select(si => si.Context)),
